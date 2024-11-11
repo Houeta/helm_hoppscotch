@@ -26,6 +26,6 @@ spec:
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.backend.autoscaling.targetmemoryPercentage }}
+        targetAverageUtilization: {{ .Values.backend.autoscaling.targetMemoryPercentage }}
     {{- end }}
 {{- end }}

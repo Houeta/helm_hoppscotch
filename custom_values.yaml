@@ -10,7 +10,6 @@ global:
   containerSecurityContext:
     runAsUser: 15000
     runAsGroup: 15000
-    fsGroup: 15000
     seccompProfile:
       type: RuntimeDefault
   ## Configure Pods Security Context
@@ -45,7 +44,7 @@ global:
   ## @param global.extraEnv
   ##
   extraEnv:
-    DATABASE_URL: postgresql://postgres:strongPassword@test-database-rw:5432/postgres
+    DATABASE_URL: 'postgresql://postgres:strongPassword@test-database-rw:5432/postgres'
     # # Auth Tokens Config
     # JWT_SECRET: "secretcode123"
     # TOKEN_SALT_COMPLEXITY: 10
@@ -77,6 +76,9 @@ global:
     # Rate Limit Config
     RATE_LIMIT_TTL: 60 # In seconds
     RATE_LIMIT_MAX: 100 # Max requests per IP
+  database:
+    username: postgres
+    password: strongPassword
 ## @section Common parameters
 
 ## @param nameOverride String to partially override common.names.fullname
@@ -204,7 +206,7 @@ admin:
   ##   - name: FOO
   ##     value: "bar"
   ##
-  extraEnv: []
+  extraEnv: {}
 
 ## Backend controller
 ##
@@ -317,7 +319,7 @@ backend:
   ##   - name: FOO
   ##     value: "bar"
   ##
-  extraEnv: []
+  extraEnv: {}
 
 ## @section Database parameters
 ##
@@ -491,4 +493,4 @@ frontend:
   ##   - name: FOO
   ##     value: "bar"
   ##
-  extraEnv: []
+  extraEnv: {}

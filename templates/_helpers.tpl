@@ -4,21 +4,21 @@
 Return the proper service name for Hoppscotch admin controller
 */}}
 {{- define "hoppscotch.admin" -}}
-    {{- printf "%s-admin" (include "common.names.fullname" .) | trunc63 | trimsuffix "-" }}
+    {{- printf "%s-admin" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}} 
 
 {{/*
 Return the proper service name for Hoppscotch backend controller
 */}}
 {{- define "hoppscotch.backend" -}}
-    {{- printf "%s-backend" (include "common.names.fullname" .) | trunc63 | trimsuffix "-" }}
+    {{- printf "%s-backend" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}} 
 
 {{/*
 Return the proper service name for Hoppscotch frontend controller
 */}}
 {{- define "hoppscotch.frontend" -}}
-    {{- printf "%s-frontend" (include "common.names.fullname" .) | trunc63 | trimsuffix "-" }}
+    {{- printf "%s-frontend" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end -}} 
 
 {{/*
@@ -28,7 +28,7 @@ Get full name image with tag/digest
 {{- if .value.digest -}}
 {{ .value.repository }}@{{ .value.digest }}
 {{- else -}}
-{{ .value.repository }}:{{ .value.tag | default .Chart.AppVersion}}
+{{ .value.repository }}:{{ .value.tag | default .context.Chart.AppVersion }}
 {{- end -}}
 {{- end -}}
 
