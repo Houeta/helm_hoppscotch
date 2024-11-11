@@ -7,11 +7,7 @@ global:
   ## @param global.containerSecurityContext.fsGroup Set Hoppscotch container's Security Context fsGroup
   ## @param global.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
   ##
-  containerSecurityContext:
-    runAsUser: 15000
-    runAsGroup: 15000
-    seccompProfile:
-      type: RuntimeDefault
+  containerSecurityContext: {}
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param global.podSecurityContext.runAsUser Set Hoppscotch containers' Security Context runAsUser
@@ -21,15 +17,7 @@ global:
   ## @param global.podSecurityContext.readOnlyRootFilesystem Set Hoppscotch containers' Security Context readOnlyRootFilesystem
   ## @param global.podSecurityContext.runAsNonRoot Set Hoppscotch container's Security Context runAsNonRoot
   ##
-  podSecurityContext:
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    runAsUser: 15000
-    runAsGroup: 15000
-    capabilities:
-      drop:
-      - ALL
+  podSecurityContext: {}
   ## @param global.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -63,7 +51,7 @@ global:
     # # Github Auth Config
     # GITHUB_CLIENT_ID: "*****"
     # GITHUB_CLIENT_SECRET: "*****"
-    # GITHUB_CALLBACK_URL: "http://localhost:3170/v1/auth/github/callback"
+    # GITHUB_CALLBACKautoscal_URL: "http://localhost:3170/v1/auth/github/callback"
     # GITHUB_SCOPE: "user:email"
     # # Microsoft Auth Config
     # MICROSOFT_CLIENT_ID: "*****"
@@ -142,7 +130,7 @@ admin:
   autoscaling:
     ## @param admin.autoscaling.enabled Enable Horizontal Pod Autoscaler for the Hoppscotch admin
     ##
-    enabled: true
+    enabled: false
     ## @param admin.autoscaling.minRelpicas Minimum number of replicas for the Hoppscotch admin
     ##
     minReplicas: 1
@@ -255,7 +243,7 @@ backend:
   autoscaling:
     ## @param admin.autoscaling.enabled Enable Horizontal Pod Autoscaler for the Hoppscotch admin
     ##
-    enabled: true
+    enabled: false
     ## @param admin.autoscaling.minRelpicas Minimum number of replicas for the Hoppscotch admin
     ##
     minReplicas: 1
@@ -429,7 +417,7 @@ frontend:
   autoscaling:
     ## @param admin.autoscaling.enabled Enable Horizontal Pod Autoscaler for the Hoppscotch admin
     ##
-    enabled: true
+    enabled: false
     ## @param admin.autoscaling.minRelpicas Minimum number of replicas for the Hoppscotch admin
     ##
     minReplicas: 1

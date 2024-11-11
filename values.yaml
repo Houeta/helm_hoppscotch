@@ -7,12 +7,7 @@ global:
   ## @param global.containerSecurityContext.fsGroup Set Hoppscotch container's Security Context fsGroup
   ## @param global.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
   ##
-  containerSecurityContext:
-    runAsUser: 15000
-    runAsGroup: 15000
-    fsGroup: 15000
-    seccompProfile:
-      type: RuntimeDefault
+  containerSecurityContext: {}
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param global.podSecurityContext.runAsUser Set Hoppscotch containers' Security Context runAsUser
