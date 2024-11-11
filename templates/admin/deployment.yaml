@@ -1,0 +1,58 @@
+{{- if .Values.admin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hoppscotch.admin" . }}
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: admin
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.admin.replicaCount }}
+  {{- if .Values.admin.updateStrategy }}
+  strategy: {{- toYaml .Values.admin.updateStrategy | nindent 4}}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: admin
+  template:
+    metadata:
+      {{- if .Values.admin.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.admin.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: admin
+    spec:
+      {{- if .Values.admin.podSecurityContext }}
+      securityContext:
+        {{- toYaml (merge .Values.global.podSecurityContext .Values.admin.podSecurityContext ) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: admin
+          securityContext:
+            {{- toYaml (merge .Values.global.containerSecurityContext .Values.admin.containerSecurityContext) | nindent 12 }}
+          image: {{ include "hoppscotch.getImage" (dict "value" .Values.admin.image) }}
+          imagePullPolicy: {{ .Values.admin.imagePullPolicy | default IfNotPresent }}
+          env:
+            {{- (include "hoppscotch.extraEnv" (deepCopy .Values.admin.extraEnv | merge .Values.global.extraEnv)) | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.admin.containerPorts.server }}
+              protocol: TCP
+          {{- if .Values.admin.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+          {{- end }}
+          {{- if or .Values.admin.resources .Values.global.resources }}
+          resources:
+            {{- if .Values.admin.resources }}
+            {{- toYaml .Values.admin.resources }}
+            {{- else }}
+            {{- toYaml .Values.global.resources }}
+            {{- end }}
+          {{- end }}
+{{- end }}

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: hoppscotch
+home: https://hoppscotch.io
+description: Hoppscotch is a light-weight, web based API development suite.
+type: application
+dependencies:
+- name: common
+  repository: "file://charts/common"
+  version: 0.x.x
+version: 0.1.0
+appVersion: 2024.10.1

@@ -1,0 +1,41 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "database.fullname" . }}
+  labels:
+    {{- include "database.labels" . | nindent 4 }}
+spec:
+  imageName: {{ include "database.getImage" . }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  instances: {{ .Values.instances }}
+  postgresUID: {{ .Values.postgresUID | default 26 }}
+  postgresGID: {{ .Values.postgresGID | default 26 }}
+  bootstrap:
+    initdb:
+      database: {{ .Values.global.database.databaseName }}
+      owner: {{ .Values.global.database.username }}
+      secret:
+        name: {{ include "database.authSecretName" . }}
+  {{- if or .Values.parameters .Values.shared_preload_libraries }}
+  postgresql:
+    {{- with .Values.parameters }}
+    parameters:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if .Values.shared_preload_libraries }}
+    shared_preload_libraries:
+    {{- range .Values.shared_preload_libraries }}
+      - {{ . | quote }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  logLevel: {{ .Values.loglevel | default "info" }}
+  storage:
+    storageClass: {{ .Values.storage.storageClass }}
+    size: {{ .Values.storage.size | default "10G" | quote }}
+  {{- if .Values.walStorage.enabled }}
+  walStorage:
+    storageClass: {{ .Values.walStorage.storageClass | default .Values.storage.storageClass }}
+    size: {{ .Values.storage.size | default "10G" | quote }}
+  {{- end }}

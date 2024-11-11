@@ -1,0 +1,13 @@
+apiVersion: v2
+name: database
+version: 0.1.4
+description: PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. This helm chart requires the deployed CloudNativePG operator. 
+type: application
+appVersion: "13.16"
+home: https://cloudnative-pg.io
+icon: https://localhost/example.png
+maintainers:
+- name: Bohdan Kushnir
+  email: bohdan.kushnir@kyivstar.net
+sources:
+- https://gitlab.com/ks-vasdev/dev-it-support/dns-api/-/tree/infra/helm/dapi/database

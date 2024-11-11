@@ -1,0 +1,58 @@
+{{- if .Values.backend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hoppscotch.backend" . }}
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: backend
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- if .Values.backend.updateStrategy }}
+  strategy: {{- toYaml .Values.backend.updateStrategy | nindent 4}}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      {{- if .Values.backend.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.backend.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: backend
+    spec:
+      {{- if .Values.backend.podSecurityContext }}
+      securityContext:
+        {{- toYaml (merge .Values.global.podSecurityContext .Values.backend.podSecurityContext ) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: backend
+          securityContext:
+            {{- toYaml (merge .Values.global.containerSecurityContext .Values.backend.containerSecurityContext) | nindent 12 }}
+          image: {{ include "hoppscotch.getImage" (dict "value" .Values.backend.image) }}
+          imagePullPolicy: {{ .Values.backend.imagePullPolicy | default IfNotPresent }}
+          env:
+            {{- (include "hoppscotch.extraEnv" (deepCopy .Values.admin.extraEnv | merge .Values.global.extraEnv)) | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.containerPorts.server }}
+              protocol: TCP
+          {{- if .Values.backend.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+          {{- end }}
+          {{- if or .Values.backend.resources .Values.global.resources }}
+          resources:
+            {{- if .Values.backend.resources }}
+            {{- toYaml .Values.backend.resources }}
+            {{- else }}
+            {{- toYaml .Values.global.resources }}
+            {{- end }}
+          {{- end }}
+{{- end }}

@@ -1,0 +1,23 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hoppscotch.frontend" . }}
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: frontend
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.frontend.service.type }}
+  {{- if and .Values.frontend.service.clusterIP (eq .Values.frontend.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.frontend.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.frontend.service.servicePortHttp }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "common.labels.selectorLabels" (dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: frontend
+{{- end }}

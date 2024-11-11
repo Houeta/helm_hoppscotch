@@ -1,0 +1,73 @@
+# CloudnativePG cluster 
+# .Chart.Name: database
+
+## @section Global parameters
+
+## Global database credentials 
+global:
+  ## @param global.database Global parameters related to the database
+  ## @param global.database.databaseName Database name
+  ## @param global.database.username Database username
+  ## @param global.database.password Database password
+  database:
+    databaseName: postgres
+    username: postgres
+    password: ""
+## @section Common parameters
+
+## Database image
+## ref: https://hub.docker.com/_/postgres
+## Please NOTE: CloudNativePG recommends using special images for the full functionality,
+## (see: https://cloudnative-pg.io/documentation/1.24/image_catalog/#cloudnativepg-catalogs)
+## @param image.repository database image repository
+## @param image.tag [default: .Chart.appVersion ] Database image tag
+## @param image.digest Database image digest (sha256:...). Please note this parameter, if set, will override the tag
+## @param image.pullPolicy Database image pull policy
+##
+image:
+  repository: postgres
+  tag: ""
+  digest: ""
+  ## Specify an imagePullPolicy
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+  ##
+  pullPolicy: IfNotPresent
+## @param instances Number of instances required in the cluster (must be an integer type)
+##
+instances: 1
+## @param postgresUID The UID of the postgres user inside the image (must be an integer type)
+##
+postgresUID: 26
+## @param postgresGID The GID of the postgres user inside the image (must be an integer type)
+##
+postgresGID: 26
+## @param parameters PostgreSQL configuration options (postgresql.conf)
+## ref: https://cloudnative-pg.io/documentation/1.24/postgresql_conf/#postgresql-configuration
+## NOTE: Certain configuration settings cannot be modified - 
+# ref:https://cloudnative-pg.io/documentation/1.24/postgresql_conf/#fixed-parameters
+##
+parameters: {}
+## @param shared_preload_libraries Lists of shared preload libraries to add to the default ones
+##
+shared_preload_libraries: []
+## @param The database instances' log level, one of the following values: error, warning,
+## info (default), debug, trace
+##
+loglevel: ""
+## Configuration of the storage of the instances
+## @param storage.storageClass StorageClass to use for PVCs.
+## @param storage.size Size of the storage; cannot be decreased
+##
+storage:
+  storageClass: ""
+  size: "10G"
+## Configuration of the storage for PostgreSQL WAL (Write-Archive-Log)
+## @param walStorage.enabled Enable WAL storage
+## @param walStorage.storageClass StorageClass to use for PVCs. If not specified, the generated PVCs
+## will use the .Values.storage.storageClass
+## @param walStorage.size Size of the storage; cannot be decreased
+##
+walStorage:
+  enabled: false
+  storageClass: ""
+  size: ""
