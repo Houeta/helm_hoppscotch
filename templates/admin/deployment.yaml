@@ -30,11 +30,9 @@ spec:
       {{- end }}
       containers:
         - name: admin
-          securityContext:
-            {{- toYaml (merge .Values.global.containerSecurityContext .Values.admin.containerSecurityContext) | nindent 12 }}
           image: {{ include "hoppscotch.getImage" (dict "value" .Values.admin.image "context" $) }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
-          env: {{- include "hoppscotch.extraEnv" ( deepCopy .Values.global.extraEnv | merge .Values.admin.extraEnv) | nindent 12 }}
+          env: {{- include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.admin.extraEnv) | nindent 12 }}
           ports:
             - name: http
               containerPort: {{ .Values.admin.containerPorts.server }}
