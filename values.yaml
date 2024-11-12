@@ -398,3 +398,7 @@ frontend:
   ##     value: "bar"
   ##
   extraEnvVars: []
+
+  ingress:
+    enabled: true
+    hostname: hoppscotch.local

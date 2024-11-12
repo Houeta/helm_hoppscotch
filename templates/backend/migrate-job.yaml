@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "hoppscotch.backend" . }}-migrate
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: backend
+    annotations:
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "2"
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrate
+          image: {{ include "hoppscotch.getImage" (dict "value" .Values.backend.image "context" $)}}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Running migrations";
+              pnpx prisma migrate deploy;
+          env: {{- (include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.backend.extraEnv)) | nindent 12 }}
+      restartPolicy: Never
+  backoffLimit: 3
