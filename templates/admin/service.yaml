@@ -14,7 +14,7 @@ spec:
   clusterIP: {{ .Values.admin.service.clusterIP }}
   {{- end }}
   ports:
-    - port: {{ .Values.admin.service.servicePortHttp }}
+    - port: {{ .Values.admin.containerPorts.server }}
       targetPort: http
       protocol: TCP
       name: http

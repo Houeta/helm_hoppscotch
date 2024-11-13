@@ -94,9 +94,6 @@ admin:
     ## clusterIP: None
     ##
     clusterIP: ""
-    ## @param admin.service.servicePortHttp Admin service port
-    ##
-    servicePortHttp: 80
   ## Hoppscotch admin controller HPA parameters
   ##
   autoscaling:
@@ -207,9 +204,6 @@ backend:
     ## clusterIP: None
     ##
     clusterIP: ""
-    ## @param admin.service.servicePortHttp Admin service port
-    ##
-    servicePortHttp: 80
   ## Hoppscotch admin controller HPA parameters
   ##
   autoscaling:
@@ -320,9 +314,6 @@ frontend:
     ## clusterIP: None
     ##
     clusterIP: ""
-    ## @param admin.service.servicePortHttp Admin service port
-    ##
-    servicePortHttp: 80
   ## Hoppscotch admin controller HPA parameters
   ##
   autoscaling:
