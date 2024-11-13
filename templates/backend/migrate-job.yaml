@@ -1,15 +1,17 @@
+{{- if .Values.backend.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "hoppscotch.backend" . }}-migrate
+  name: {{ include "hoppscotch.backend" . }}-migrate-{{ now | date "2006-01-02-154530" }}
   labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
     app.kubernetes.io/component: backend
     annotations:
     {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
-    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook": "pre-install"
     "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
     spec:
@@ -24,4 +26,5 @@ spec:
               pnpx prisma migrate deploy;
           env: {{- (include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.backend.extraEnv)) | nindent 12 }}
       restartPolicy: Never
-  backoffLimit: 3
+  backoffLimit: 5
+{{- end }}
