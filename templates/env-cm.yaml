@@ -3,9 +3,12 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-envvars
   labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
-  {{- end }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "2"
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
 data:
   DATABASE_URL: {{ printf "postgresql://%s:%s@%s-database-rw:5432/%s" .Values.global.database.username .Values.global.database.password .Release.Name .Values.global.database.databaseName }}
   VITE_ALLOWED_AUTH_PROVIDERS: EMAIL
