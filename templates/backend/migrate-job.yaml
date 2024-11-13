@@ -25,6 +25,13 @@ spec:
               echo "Running migrations";
               pnpx prisma migrate deploy;
           env: {{- (include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.backend.extraEnv)) | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" }}-envvars
+            - secretRef:
+                name: {{ include "common.names.fullname" }}-envvars
+            - secretref:
+                name: {{ include "common.names.fullname" }}-proxy
       restartPolicy: Never
   backoffLimit: 5
 {{- end }}

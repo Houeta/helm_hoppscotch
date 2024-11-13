@@ -53,6 +53,9 @@ commonLabels: {}
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
+## @param
+#
+proxyEnv: {}
 ## @section Admin controller parameters
 
 ## Admin controller
@@ -68,7 +71,7 @@ admin:
   ## @param admin.containerPorts.server Hoppscotch admin controller server port number
   ##
   containerPorts:
-    server: 8080
+    server: 80
   ## Hoppscotch admin image
   ## @param image.repository Hoppscotch admin image repository
   ## @skip  image.tag Hoppscotch admin image tag
@@ -178,7 +181,7 @@ backend:
   ## @param admin.containerPorts.server Hoppscotch admin controller server port number
   ##
   containerPorts:
-    server: 8080
+    server: 80
   ## Hoppscotch admin image
   ## @param image.repository Hoppscotch admin image repository
   ## @skip  image.tag Hoppscotch admin image tag
@@ -275,6 +278,11 @@ backend:
   ##
   extraEnvVars: []
 
+  database:
+    databaseName: postgres
+    username: postgres
+    password: strongPassword
+
 ## Frontend controller
 ##
 frontend:
@@ -288,7 +296,7 @@ frontend:
   ## @param admin.containerPorts.server Hoppscotch admin controller server port number
   ##
   containerPorts:
-    server: 8080
+    server: 80
   ## Hoppscotch admin image
   ## @param image.repository Hoppscotch admin image repository
   ## @skip  image.tag Hoppscotch admin image tag

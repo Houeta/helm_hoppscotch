@@ -10,5 +10,5 @@ dependencies:
 - name: database
   repository: "file://charts/database"
   version: 0.x.x
-version: 0.2.0
+version: 0.3.0
 appVersion: 2024.10.1

@@ -46,3 +46,19 @@ Get full name image with tag/digest
     {{- toYaml $result | nindent 0 -}}
   {{- end -}}
 {{- end -}}
+
+{{/* Format service list */}}
+{{- define "hoppscotch.getServiceList" -}}
+{{- $services := list -}}
+{{- if .Values.admin.enabled -}}
+  {{- $services = append $services (printf "http://%s:%d" (include "hoppscotch.admin") .Values.admin.containerPorts.server) -}}
+{{- end -}}
+{{- if .Values.backend.enabled -}}
+  {{- $services = append $services (printf "http://%s:%d" (include "hoppscotch.backend") .Values.backend.containerPorts.server) -}}
+{{- end -}}
+{{- if .Values.frontend.enabled -}}
+  {{- $services = append $services (printf "http://%s:%d" (include "hoppscotch.frontend") .Values.frontend.containerPorts.server) -}}
+{{- end -}}
+{{- $serviceList := join "," $services -}}
+{{ $serviceList }}
+{{- end -}}

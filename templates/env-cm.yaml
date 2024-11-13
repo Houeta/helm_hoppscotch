@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}-envvars
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  DATABASE_URL: {{ printf "postgresql://%s:%s@%s-database-rw:5432/%s" .Values.global.database.username .Values.global.database.password .Release.Name .Values.global.database.databaseName }}
+  VITE_ALLOWED_AUTH_PROVIDERS: EMAIL
+  WHITELISTED_ORIGINS: {{ include "hoppscotch.getServiceList" . }}
+  MAILER_SMTP_ENABLE: false
+  {{- if .Values.frontend.enabled }}
+  VITE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend") .Values.frontend.containerPorts.server }}
+  VITE_SHORTCODE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend") .Values.frontend.containerPorts.server }}
+  {{- end }}
+  {{- if .Values.admin.enabled }}
+  VITE_ADMIN_URL: {{ printf "http://%s:%d" (include "hoppscotch.admin") .Values.admin.containerPorts.server }}
+  {{- end }}
+  {{- if .Values.backend.enabled }}
+  VITE_BACKEND_GQL_URL: {{ printf "http://%s:%d/graphql" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
+  VITE_BACKEND_WS_URL:  {{ printf "wss://%s:%d/graphql" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
+  VITE_BACKEND_API_URL: {{ printf "http://%s:%d/v1" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
+  {{- end }}

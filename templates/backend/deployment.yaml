@@ -33,6 +33,11 @@ spec:
           image: {{ include "hoppscotch.getImage" (dict "value" .Values.backend.image "context" $) }}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           env: {{- (include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.backend.extraEnv)) | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" }}-envvars
+            - secretRef:
+                name: {{ include "common.names.fullname" }}-envvars
           ports:
             - name: http
               containerPort: {{ .Values.backend.containerPorts.server }}
