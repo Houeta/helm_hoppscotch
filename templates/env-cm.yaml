@@ -12,14 +12,14 @@ data:
   WHITELISTED_ORIGINS: {{ include "hoppscotch.getServiceList" . }}
   MAILER_SMTP_ENABLE: false
   {{- if .Values.frontend.enabled }}
-  VITE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend") .Values.frontend.containerPorts.server }}
-  VITE_SHORTCODE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend") .Values.frontend.containerPorts.server }}
+  VITE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend" .) .Values.frontend.containerPorts.server }}
+  VITE_SHORTCODE_BASE_URL: {{ printf "http://%s:%d" (include "hoppscotch.frontend" .) .Values.frontend.containerPorts.server }}
   {{- end }}
   {{- if .Values.admin.enabled }}
-  VITE_ADMIN_URL: {{ printf "http://%s:%d" (include "hoppscotch.admin") .Values.admin.containerPorts.server }}
+  VITE_ADMIN_URL: {{ printf "http://%s:%d" (include "hoppscotch.admin" .) .Values.admin.containerPorts.server }}
   {{- end }}
   {{- if .Values.backend.enabled }}
-  VITE_BACKEND_GQL_URL: {{ printf "http://%s:%d/graphql" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
-  VITE_BACKEND_WS_URL:  {{ printf "wss://%s:%d/graphql" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
-  VITE_BACKEND_API_URL: {{ printf "http://%s:%d/v1" (include "hoppscotch.backend") .Values.backend.containerPorts.server }}
+  VITE_BACKEND_GQL_URL: {{ printf "http://%s:%d/graphql" (include "hoppscotch.backend" .) .Values.backend.containerPorts.server }}
+  VITE_BACKEND_WS_URL:  {{ printf "wss://%s:%d/graphql" (include "hoppscotch.backend" .) .Values.backend.containerPorts.server }}
+  VITE_BACKEND_API_URL: {{ printf "http://%s:%d/v1" (include "hoppscotch.backend" .) .Values.backend.containerPorts.server }}
   {{- end }}
