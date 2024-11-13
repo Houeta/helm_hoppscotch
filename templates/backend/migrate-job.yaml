@@ -27,11 +27,11 @@ spec:
           env: {{- (include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.backend.extraEnv)) | nindent 12 }}
           envFrom:
             - configMapRef:
-                name: {{ include "common.names.fullname" }}-envvars
+                name: {{ include "hoppscotch.envvars" . }}
             - secretRef:
-                name: {{ include "common.names.fullname" }}-envvars
+                name: {{ include "hoppscotch.envvars" . }}
             - secretref:
-                name: {{ include "common.names.fullname" }}-proxy
+                name: {{ printf "%s-proxy" (include "common.names.fullname" .) }}
       restartPolicy: Never
   backoffLimit: 5
 {{- end }}

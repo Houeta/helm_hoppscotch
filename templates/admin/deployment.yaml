@@ -35,9 +35,9 @@ spec:
           env: {{- include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.admin.extraEnv) | nindent 12 }}
           envFrom:
             - configMapRef:
-                name: {{ include "common.names.fullname" }}-envvars
+                name: {{ include "hoppscotch.envvars" . }}
             - secretRef:
-                name: {{ include "common.names.fullname" }}-envvars
+                name: {{ include "hoppscotch.envvars" . }}
           ports:
             - name: http
               containerPort: {{ .Values.admin.containerPorts.server }}
