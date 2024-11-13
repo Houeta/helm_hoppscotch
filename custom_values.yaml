@@ -154,7 +154,7 @@ admin:
   ## @param admin.livenessProbe.enabled Enable livenessProbe on Hoppscotch admin controller nodes
   ##
   livenessProbe:
-    enabled: true
+    enabled: false
   ## @param admin.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -267,7 +267,7 @@ backend:
   ## @param admin.livenessProbe.enabled Enable livenessProbe on Hoppscotch admin controller nodes
   ##
   livenessProbe:
-    enabled: true
+    enabled: false
   ## @param admin.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -482,3 +482,7 @@ frontend:
   ##     value: "bar"
   ##
   extraEnv: {}
+
+ingress:
+    enabled: true
+    hostname: hoppscotch.local
