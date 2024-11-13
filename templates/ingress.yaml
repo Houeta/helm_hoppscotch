@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.enabled ( or .Values.admin.enabled .Values.backend.enabled .Values.frontend.enabled ) }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -12,6 +12,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
+        {{- if .Values.admin.enabled }}
         - path: /admin
           pathType: Prefix
           backend:
@@ -19,13 +20,17 @@ spec:
               name: {{ include "hoppscotch.admin" . }}
               port:
                 number: {{ .Values.admin.containerPorts.server }}
-        - path: /backend
+        {{- end }}
+        {{- if .Values.backend.enabled }}
+        - path: /api
           pathType: Prefix
           backend:
             service:
               name: {{ include "hoppscotch.backend" . }}
               port:
                 number: {{ .Values.backend.containerPorts.server }}
+        {{- end }}
+        {{- if .Values.frontend.enabled }}
         - path: /
           pathType: Prefix
           backend:
@@ -33,4 +38,5 @@ spec:
               name: {{ include "hoppscotch.frontend" . }}
               port:
                 number: {{ .Values.frontend.containerPorts.server }}
+        {{- end }}
 {{- end }}
