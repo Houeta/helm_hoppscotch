@@ -495,6 +495,17 @@ proxy:
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
     ##
     pullPolicy: IfNotPresent
+  ## Hoppscotch proxy controller service parameters
+  ##
+  service:
+    ## @param proxy.service.type Hoppscotch proxy controller service type
+    ##
+    type: ClusterIP
+    ## @param proxy.service.clusterIP Hoppscotch proxy controller service Cluster IP
+    ## e.g.:
+    ## clusterIP: None
+    ##
+    clusterIP: ""
   ## @param proxy.livenessProbe.enabled Enable livenessProbe on Hoppscotch proxy controller nodes
   ##
   livenessProbe:
