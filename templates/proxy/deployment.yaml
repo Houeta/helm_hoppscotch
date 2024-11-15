@@ -32,7 +32,6 @@ spec:
         - name: proxy
           image: {{ include "hoppscotch.getImage" (dict "value" .Values.proxy.image "context" $) }}
           imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
-          env: {{- include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.proxy.extraEnv) | nindent 12 }}
           {{- with .Values.proxy.command }}
           command:
             {{- toYaml . | nindent 12 }}
