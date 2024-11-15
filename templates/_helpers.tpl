@@ -22,6 +22,13 @@ Return the proper service name for Hoppscotch frontend controller
 {{- end -}} 
 
 {{/*
+Return the proper service name for Hoppscotch proxy controller
+*/}}
+{{- define "hoppscotch.proxy" -}}
+    {{- printf "%s-proxy" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}} 
+
+{{/*
 Return the proper name of env cm/secret resource
 */}}
 {{- define "hoppscotch.envvars" -}}

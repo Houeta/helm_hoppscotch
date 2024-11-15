@@ -1,0 +1,23 @@
+{{- if .Values.proxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hoppscotch.proxy" . }}
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: proxy
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.proxy.service.type }}
+  {{- if and .Values.proxy.service.clusterIP (eq .Values.proxy.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.proxy.service.clusterIP }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.proxy.containerPorts.server }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "common.labels.selectorLabels" (dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: proxy
+{{- end }}

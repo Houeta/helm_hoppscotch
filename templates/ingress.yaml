@@ -38,12 +38,13 @@ spec:
               name: {{ include "hoppscotch.frontend" . }}
               port:
                 number: {{ .Values.frontend.containerPorts.server }}
+        {{- if .Values.proxy.enabled}}
         - path: /proxy
           pathType: Prefix
           backend:
             service:
-              name: dev-hoppscotch-proxy
+              name: {{ include "hoppscotch.proxy" . }}
               port:
-                number: 9159
+                number: {{ .Values.proxy.containerPorts.server }}
         {{- end }}
 {{- end }}

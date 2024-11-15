@@ -1,0 +1,59 @@
+{{- if .Values.proxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hoppscotch.proxy" . }}
+  labels: {{- include "common.labels.commonLabels" ( dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+    app.kubernetes.io/component: proxy
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.proxy.replicaCount }}
+  {{- if .Values.proxy.updateStrategy }}
+  strategy: {{- toYaml .Values.proxy.updateStrategy | nindent 4}}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 6 }}
+      app.kubernetes.io/component: proxy
+  template:
+    metadata:
+      {{- if .Values.proxy.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.proxy.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.selectorLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+        app.kubernetes.io/component: proxy
+    spec:
+      {{- if .Values.proxy.podSecurityContext }}
+      securityContext:
+        {{- toYaml (merge .Values.global.podSecurityContext .Values.proxy.podSecurityContext ) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: proxy
+          image: {{ include "hoppscotch.getImage" (dict "value" .Values.proxy.image "context" $) }}
+          imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+          env: {{- include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.proxy.extraEnv) | nindent 12 }}
+          {{- with .Values.proxy.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.proxy.containerPorts.server }}
+              protocol: TCP
+          {{- if .Values.proxy.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+          {{- end }}
+          {{- if or .Values.proxy.resources .Values.global.resources }}
+          resources:
+            {{- if .Values.proxy.resources }}
+            {{- toYaml .Values.proxy.resources }}
+            {{- else }}
+            {{- toYaml .Values.global.resources }}
+            {{- end }}
+          {{- end }}
+{{- end }}
