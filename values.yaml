@@ -480,7 +480,7 @@ proxy:
   command:
     - "sh"
     - "-c"
-    - ""/etc/proxyscotch/out/linux-server/proxyscotch-server-* --host 0.0.0.0:5159 --token '' --verify-sslcert false --allowed-origins=* "
+    - "/etc/proxyscotch/out/linux-server/proxyscotch-server-* --host 0.0.0.0:5159 --token '' --verify-sslcert false --allowed-origins=* "
   ## Hoppscotch proxy image
   ## @param proxy.image.repository Hoppscotch proxy image repository
   ## @skip  proxy.image.tag Hoppscotch proxy image tag
