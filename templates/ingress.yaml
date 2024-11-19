@@ -8,6 +8,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | default "nginx" }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+      - {{ .Values.ingress.hostname }}
+        secretName: {{ include "common.names.fullname" . }}-tls
+  {{- end }}
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
@@ -22,7 +28,7 @@ spec:
                 number: {{ .Values.admin.containerPorts.server }}
         {{- end }}
         {{- if .Values.backend.enabled }}
-        - path: /api
+        - path: /backend
           pathType: Prefix
           backend:
             service:
