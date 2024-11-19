@@ -10,9 +10,9 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | default "nginx" }}
   {{- if .Values.ingress.tls }}
   tls:
-    - hosts:
-      - {{ .Values.ingress.hostname }}
-        secretName: {{ include "common.names.fullname" . }}-tls
+  - hosts:
+    - {{ .Values.ingress.hostname }}
+    secretName: {{ include "common.names.fullname" . }}-tls
   {{- end }}
   rules:
     - host: "{{ .Values.ingress.hostname }}"

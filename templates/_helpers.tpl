@@ -36,6 +36,16 @@ Return the proper name of env cm/secret resource
 {{- end -}} 
 
 {{/*
+Get web protocol name 
+*/}}
+{{- define "hoppscotch.getWebPrtcl" -}}
+{{- if .Values.ingress.tls }}
+  {{- printf "https" }}
+{{- else -}}
+  {{- printf "http" }}
+{{- end -}}
+
+{{/*
 Get full name image with tag/digest
 */}}
 {{- define "hoppscotch.getImage" -}}
@@ -65,13 +75,13 @@ Get full name image with tag/digest
 {{- define "hoppscotch.getServiceList" -}}
 {{- $services := list -}}
 {{- if .Values.admin.enabled -}}
-  {{- $services = append $services (printf "http://%s:%d/admin" .Values.ingress.hostname (.Values.admin.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d/admin" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.admin.containerPorts.server | int )) -}}
 {{- end -}}
 {{- if .Values.backend.enabled -}}
-  {{- $services = append $services (printf "http://%s:%d/backend" .Values.ingress.hostname (.Values.backend.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d/backend" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.backend.containerPorts.server | int )) -}}
 {{- end -}}
 {{- if .Values.frontend.enabled -}}
-  {{- $services = append $services (printf "http://%s:%d" .Values.ingress.hostname (.Values.frontend.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int )) -}}
 {{- end -}}
 {{- $serviceList := join "," $services -}}
 {{ $serviceList }}
