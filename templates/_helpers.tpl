@@ -44,6 +44,7 @@ Get web protocol name
 {{- else -}}
   {{- printf "http" }}
 {{- end -}}
+{{- end -}}
 
 {{/*
 Get full name image with tag/digest
@@ -75,13 +76,13 @@ Get full name image with tag/digest
 {{- define "hoppscotch.getServiceList" -}}
 {{- $services := list -}}
 {{- if .Values.admin.enabled -}}
-  {{- $services = append $services (printf "%s://%s:%d/admin" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.admin.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d/admin" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.admin.containerPorts.server | int )) -}}
 {{- end -}}
 {{- if .Values.backend.enabled -}}
-  {{- $services = append $services (printf "%s://%s:%d/backend" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.backend.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d/backend" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.backend.containerPorts.server | int )) -}}
 {{- end -}}
 {{- if .Values.frontend.enabled -}}
-  {{- $services = append $services (printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int )) -}}
+  {{- $services = append $services (printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int )) -}}
 {{- end -}}
 {{- $serviceList := join "," $services -}}
 {{ $serviceList }}

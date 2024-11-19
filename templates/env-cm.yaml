@@ -16,14 +16,14 @@ data:
   RATE_LIMIT_MAX: '100'
   WHITELISTED_ORIGINS: "*"
   {{- if .Values.frontend.enabled }}
-  VITE_BASE_URL: {{ printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int ) }}
-  VITE_SHORTCODE_BASE_URL: {{ printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int ) }}
+  VITE_BASE_URL: {{ printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int ) }}
+  VITE_SHORTCODE_BASE_URL: {{ printf "%s://%s:%d" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.frontend.containerPorts.server | int ) }}
   {{- end }}
   {{- if .Values.admin.enabled }}
-  VITE_ADMIN_URL: {{ printf "%s://%s:%d/admin" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.admin.containerPorts.server | int ) }}
+  VITE_ADMIN_URL: {{ printf "%s://%s:%d/admin" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.admin.containerPorts.server | int ) }}
   {{- end }}
   {{- if .Values.backend.enabled }}
-  VITE_BACKEND_GQL_URL: {{ printf "%s://%s:%d/backend/graphql" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.backend.containerPorts.server | int ) }}
+  VITE_BACKEND_GQL_URL: {{ printf "%s://%s:%d/backend/graphql" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.backend.containerPorts.server | int ) }}
   VITE_BACKEND_WS_URL:  {{ printf "wss://%s:%d/backend/graphql" .Values.ingress.hostname (.Values.backend.containerPorts.server | int ) }}
-  VITE_BACKEND_API_URL: {{ printf "%s://%s:%d/backend/v1" ( include "hoppscotch.getWebPrtcl" ) .Values.ingress.hostname (.Values.backend.containerPorts.server | int ) }}
+  VITE_BACKEND_API_URL: {{ printf "%s://%s:%d/backend/v1" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname (.Values.backend.containerPorts.server | int ) }}
   {{- end }}
