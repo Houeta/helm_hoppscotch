@@ -1,4 +1,4 @@
-{{- if and .Values.ingress.enabled ( or .Values.admin.enabled .Values.backend.enabled .Values.frontend.enabled .Values.proxy.enabled ) }}
+{{- if and .Values.ingress.enabled ( or .Values.admin.enabled .Values.frontend.enabled .Values.proxy.enabled ) }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -27,15 +27,6 @@ spec:
               port:
                 number: {{ .Values.admin.containerPorts.server }}
         {{- end }}
-        {{- if .Values.backend.enabled }}
-        - path: /backend
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ include "hoppscotch.backend" . }}
-              port:
-                number: {{ .Values.backend.containerPorts.server }}
-        {{- end }}
         {{- if .Values.frontend.enabled }}
         - path: /
           pathType: Prefix
@@ -54,4 +45,32 @@ spec:
               port:
                 number: {{ .Values.proxy.containerPorts.server }}
         {{- end }}
+{{- end }}
+{{- if and .Values.ingress.enabled .Values.backend.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-backend
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName | default "nginx" }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.hostname }}
+    secretName: {{ include "common.names.fullname" . }}-tls
+  {{- end }}
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+        - path: /backend(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ include "hoppscotch.backend" . }}
+              port:
+                number: {{ .Values.backend.containerPorts.server }}
 {{- end }}
