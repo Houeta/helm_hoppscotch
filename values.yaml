@@ -543,10 +543,26 @@ proxy:
     ## Can be set to RollingUpdate or OnDelete
     ##
     type: RollingUpdate
+
 ## Ingress controller
 ## 
-## @param ingress.enabled Enable the creation of an ingress
-## @param ingress.hostname Ingress hostname for the Hoppscotch ingress
 ingress:
+    ## @param ingress.enabled Enable the creation of an ingress
+    ## 
     enabled: true
+    ## @param ingress.hostname Ingress hostname for the Hoppscotch ingress
+    ##
     hostname: hoppscotch.local
+    ## @param ingress.tls tls provides ssl credentials. By default: not declared
+    ## @param ingress.certificate tls certificate in raw format
+    ## @param ingress.key tls key in raw format
+    ##
+    # Example:
+    # tls:
+    #   certificate: ""
+    #   key: ""
+    ## @param ingress.auth auth provides a basic auth authorization in list format
+    ## @param ingress.auth[].username username for authorization
+    ## @param ingress.auth[].password passowrd for authorization
+    ##
+    auth: null

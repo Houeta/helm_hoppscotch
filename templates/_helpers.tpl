@@ -36,6 +36,14 @@ Return the proper name of env cm/secret resource
 {{- end -}} 
 
 {{/*
+Return the proper name of basic-auth secret resource
+*/}}
+{{- define "hoppscotch.basicAuth" -}}
+    {{- printf "%s-basic-auth" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end -}} 
+
+
+{{/*
 Get web protocol name 
 */}}
 {{- define "hoppscotch.getWebPrtcl" -}}

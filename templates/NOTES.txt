@@ -1,0 +1,92 @@
+###############################################################################
+###                            Hopscotch Service                            ###
+###############################################################################
+
+Thank you for installing the Hopscotch service!
+
+Your deployment includes the following components:
+- **Frontend**: User interface for interacting with Hopscotch.
+- **Backend**: Handles server-side logic and API requests.
+- **Admin Dashboard**: Administrative interface for managing the service.
+- **Proxyscotch**: Proxy service to ensure API requests are routed server-side.
+- **PostgreSQL**: Database for storing application data.
+
+To access and manage the deployment, follow the instructions below.
+
+-------------------------------------------------------------------------------
+### Application Access ###
+-------------------------------------------------------------------------------
+
+{{- if .Values.ingress.enabled }}
+1. **Frontend**
+{{- if .Values.frontend.enabled }}
+   URL: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.hostname }}/
+{{- else }}
+   The frontend component is disabled
+{{- end }}
+
+2. **Backend**
+{{- if .Values.backend.enabled }}
+   URL: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.hostname }}/backend
+{{- else }}
+   The backend component is disabled
+{{- end }}
+
+3. **Admin Dashboard**
+{{- if .Values.admin.enabled }}
+   URL: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.hostname }}/admin
+{{- else }}
+   The admin component is disabled
+{{- end }}
+
+4. **Proxyscotch**
+   The Proxyscotch service ensures server-side API calls for the Hopscotch frontend. It is integrated with the frontend automatically.
+{{- if .Values.proxy.enabled }}
+   URL: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.hostname }}/proxy
+{{- else }}
+   The proxy component is disabled
+{{- end }}
+{{- else }}
+Ingress was disabled in values.yaml. Access is restricted from http/s
+{{- end }}
+
+-------------------------------------------------------------------------------
+### PostgreSQL Database ###
+-------------------------------------------------------------------------------
+
+- **Service Name**: {{ printf "%s-database-rw" .Release.Name }}
+- **Port**: 5432
+- **Database Name**: {{ .Values.global.database.databaseName }}
+- **Username**: {{ .Values.global.database.username }}
+
+To access the database:
+1. Use a Kubernetes port-forward command:
+
+kubectl port-forward svc/{{ printf "%s-database-rw" .Release.Name }} 5432:5432
+
+2. Connect to the database locally at `localhost:5432` using the credentials above.
+
+-------------------------------------------------------------------------------
+### Additional Information ###
+-------------------------------------------------------------------------------
+
+1. Admin Dashboard Invites
+
+    - Administrators can invite users directly via email from the admin dashboard
+    - Navigate to the "User Management" section in the admin dashboard and use the "Invite user" feature to send email invites
+    - Ensure that the email service is properly configured in the system for this functionality to work.
+
+2. Configuring Proxy Component
+
+    - To use the proxy component, users meed to configure the proxy URL in their settings
+    - Navigate to "Settings" -> "Interceptor" -> "Proxy" and specify the Proxy URL as follows:
+        http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.hostname }}/proxy
+    - Ensure that the ingress hostname is correctly configured in the values.yaml file during deployment.
+
+3. Ingress Basic Authentication
+
+    - Basic authentication is enabled for added security
+    - Usernames and passwords can be configured in the values.yaml file under the @ingress.auth section
+
+-------------------------------------------------------------------------------
+For more details, visit the [Hopscotch documentation](https://github.com/hoppscotch/hoppscotch).
