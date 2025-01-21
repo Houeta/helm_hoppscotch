@@ -33,6 +33,8 @@ spec:
           image: {{ include "hoppscotch.getImage" (dict "value" .Values.admin.image "context" $) }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
           env: {{- include "hoppscotch.extraEnv" (deepCopy .Values.global.extraEnv | merge .Values.admin.extraEnv) | nindent 12 }}
+            - name: ENABLE_SUBPATH_BASED_ACCESS
+              value: "true"
           envFrom:
             - configMapRef:
                 name: {{ include "hoppscotch.envvars" . }}

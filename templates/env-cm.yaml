@@ -16,7 +16,9 @@ data:
   RATE_LIMIT_MAX: '100'
   REFRESH_TOKEN_VALIDITY: '604800000'
   ACCESS_TOKEN_VALIDITY: '86400000'
+  MAGIC_LINK_TOKEN_VALIDITY: '3'
   WHITELISTED_ORIGINS: "*"
+  ALLOW_ANALYTICS_COLLECTION: "false"
   {{- if .Values.frontend.enabled }}
   VITE_BASE_URL: {{ printf "%s://%s" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname }}
   VITE_SHORTCODE_BASE_URL: {{ printf "%s://%s" ( include "hoppscotch.getWebPrtcl" .) .Values.ingress.hostname }}
