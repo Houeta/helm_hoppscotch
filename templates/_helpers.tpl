@@ -95,3 +95,12 @@ Get full name image with tag/digest
 {{- $serviceList := join "," $services -}}
 {{ $serviceList }}
 {{- end -}}
+
+{{/* Generate htpasswd file */}}
+{{- define "hoppscotch.basicAuth.generateHtpasswd" -}}
+{{- $auth := .Values.ingress.auth -}}
+{{- range $user := $auth -}}
+{{ $user.username }}:{{ printf "%s" $user.password | b64enc | printf "$(echo '%s' | base64 -d | openssl passwd -stdin -apr1)" | trim }}
+{{- "\n" -}}
+{{- end -}}
+{{- end -}}
